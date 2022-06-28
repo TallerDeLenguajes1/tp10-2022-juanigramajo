@@ -6,45 +6,94 @@ using System.Text.Json;
 using System.Text.Json.Serialization;
 
 
+Punto1();
+Punto2();
 
-var url = $"https://age-of-empires-2-api.herokuapp.com/api/v1/civilizations"; 
-var request = (HttpWebRequest)WebRequest.Create(url);
-request.Method = "GET";
-request.ContentType = "application/json";
-request.Accept = "application/json";
 
-try
+
+
+
+
+static void Punto1()
 {
-    using (WebResponse response = request.GetResponse())
+    var url = $"https://age-of-empires-2-api.herokuapp.com/api/v1/civilizations";
+    var request = (HttpWebRequest)WebRequest.Create(url);
+    request.Method = "GET";
+    request.ContentType = "application/json";
+    request.Accept = "application/json";
+
+    try
     {
-        using (Stream strReader = response.GetResponseStream())
+        using (WebResponse response = request.GetResponse())
         {
-            if (strReader == null) return;
-            using (StreamReader objReader = new StreamReader(strReader))
+            using (Stream strReader = response.GetResponseStream())
             {
-                string responseBody = objReader.ReadToEnd();
-
-
-                Root Listado = JsonSerializer.Deserialize<Root>(responseBody);
-
-                foreach (Civilization civilization in Listado.Civilizations)
+                if (strReader == null) return;
+                using (StreamReader objReader = new StreamReader(strReader))
                 {
-                    Console.WriteLine("\nID: [" + civilization.Id + "]\nNombre: " + civilization.Name + "\nExpansion: " + civilization.Expansion + "\n");
+                    string responseBody = objReader.ReadToEnd();
+
+
+                    Root Listado = JsonSerializer.Deserialize<Root>(responseBody);
+
+                    foreach (Civilization civilization in Listado.Civilizations)
+                    {
+                        Console.WriteLine("\nID: [" + civilization.Id + "]\nNombre: " + civilization.Name + "\nExpansion: " + civilization.Expansion + "\n");
+                    }
+
+
+                    Console.WriteLine("\n-------------------------------------------\n");
+                    Console.WriteLine($"ID: [{Listado.Civilizations[22].Id}]");
+                    Console.WriteLine("Nombre: " + Listado.Civilizations[22].Name);
+                    Console.WriteLine("Expansion: " + Listado.Civilizations[22].Expansion);
+                    Console.WriteLine("Tipo de ejército: " + Listado.Civilizations[22].ArmyType);
+                    Console.WriteLine("Bono de equipo: " + Listado.Civilizations[22].TeamBonus);
                 }
-
-
-                Console.WriteLine("\n-------------------------------------------\n");
-                Console.WriteLine($"ID: [{Listado.Civilizations[22].Id}]");
-                Console.WriteLine("Nombre: " + Listado.Civilizations[22].Name);
-                Console.WriteLine("Expansion: " + Listado.Civilizations[22].Expansion);
-                Console.WriteLine("Tipo de ejército: " + Listado.Civilizations[22].ArmyType);
-                Console.WriteLine("Bono de equipo: " + Listado.Civilizations[22].TeamBonus);
             }
         }
     }
+
+    catch (WebException ex)
+    {
+        Console.WriteLine("\nNo pudimos conectar con la API.");
+    }
 }
 
-catch (WebException ex)
+
+static void Punto2()
 {
-    Console.WriteLine("\nNo pudimos conectar con la API.");
+    
+    var url = $"https://age-of-empires-2-api.herokuapp.com/api/v1/structures";
+    var request = (HttpWebRequest)WebRequest.Create(url);
+    request.Method = "GET";
+    request.ContentType = "application/json";
+    request.Accept = "application/json";
+
+    try
+    {
+        using (WebResponse response = request.GetResponse())
+        {
+            using (Stream strReader = response.GetResponseStream())
+            {
+                if (strReader == null) return;
+                using (StreamReader objReader = new StreamReader(strReader))
+                {
+                    string responseBody = objReader.ReadToEnd();
+
+
+                    RootDos Listado = JsonSerializer.Deserialize<RootDos>(responseBody);
+
+                    foreach (Structure structure in Listado.Structures)
+                    {
+                        Console.WriteLine("\nID: [" + structure.Id + "]\nNombre: " + structure.Name + "\nExpansion: " + structure.Expansion + "\n");
+                    }
+                }
+            }
+        }
+    }
+
+    catch (WebException ex)
+    {
+        Console.WriteLine("\nNo pudimos conectar con la API.");
+    }
 }
